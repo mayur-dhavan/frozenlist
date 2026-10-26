@@ -168,6 +168,57 @@ class FrozenListMixin:
             _list.remove(1)
         assert _list == [1]
 
+    def test_remove_frozen_missing_item(self) -> None:
+        _list = self.FrozenList([1])
+        _list.freeze()
+        with pytest.raises(RuntimeError):
+            _list.remove(2)
+        assert _list == [1]
+
+    def test_pop_frozen_out_of_range(self) -> None:
+        _list = self.FrozenList([1, 2])
+        _list.freeze()
+        with pytest.raises(RuntimeError):
+            _list.pop(99)
+        assert _list == [1, 2]
+
+    def test_clear_frozen_empty(self) -> None:
+        _list = self.FrozenList()
+        _list.freeze()
+        with pytest.raises(RuntimeError):
+            _list.clear()
+        assert _list == []
+
+    def test_reverse_frozen_short(self) -> None:
+        for items in ([], [1]):
+            _list = self.FrozenList(items)
+            _list.freeze()
+            with pytest.raises(RuntimeError):
+                _list.reverse()
+            assert _list == items
+
+    def test_extend_frozen_empty_iterable(self) -> None:
+        _list = self.FrozenList([1])
+        _list.freeze()
+        with pytest.raises(RuntimeError):
+            _list.extend([])
+        assert _list == [1]
+
+    def test_extend_frozen_generator_not_consumed(self) -> None:
+        _list = self.FrozenList([1])
+        _list.freeze()
+        gen = (x for x in [2, 3])
+        with pytest.raises(RuntimeError):
+            _list.extend(gen)
+        assert list(gen) == [2, 3]
+
+    def test_iadd_frozen_empty_iterable(self) -> None:
+        _list = self.FrozenList([1])
+        _list.freeze()
+        with pytest.raises(RuntimeError):
+            _list += []
+        assert _list == [1]
+
     def test_clear(self) -> None:
         _list = self.FrozenList([1])
         _list.clear()
