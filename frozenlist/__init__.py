@@ -64,6 +64,36 @@ class FrozenList(MutableSequence):
             raise RuntimeError("Cannot modify frozen list.")
         self._items.insert(pos, item)
 
+    def pop(self, index=-1):
+        if self._frozen:
+            raise RuntimeError("Cannot modify frozen list.")
+        return super().pop(index)
+
+    def remove(self, item):
+        if self._frozen:
+            raise RuntimeError("Cannot modify frozen list.")
+        super().remove(item)
+
+    def clear(self):
+        if self._frozen:
+            raise RuntimeError("Cannot modify frozen list.")
+        super().clear()
+
+    def reverse(self):
+        if self._frozen:
+            raise RuntimeError("Cannot modify frozen list.")
+        super().reverse()
+
+    def extend(self, values):
+        if self._frozen:
+            raise RuntimeError("Cannot modify frozen list.")
+        super().extend(values)
+
+    def __iadd__(self, values):
+        if self._frozen:
+            raise RuntimeError("Cannot modify frozen list.")
+        return super().__iadd__(values)
+
     def __repr__(self):
         return f"<FrozenList(frozen={self._frozen}, {self._items!r})>"
 
